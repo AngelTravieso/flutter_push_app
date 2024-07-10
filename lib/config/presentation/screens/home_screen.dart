@@ -13,7 +13,6 @@ class HomeScreen extends StatelessWidget {
           (NotificationsBloc bloc) => Text('${bloc.state.status}'),
         ),
         actions: <Widget>[
-          // TODO: solicitar permisos de notificaciones
           IconButton(
             onPressed: () =>
                 context.read<NotificationsBloc>().requestPermission(),
@@ -29,13 +28,27 @@ class HomeScreen extends StatelessWidget {
 }
 
 class _HomeView extends StatelessWidget {
-  const _HomeView({super.key});
+  const _HomeView();
 
   @override
   Widget build(BuildContext context) {
+    final notifications =
+        context.watch<NotificationsBloc>().state.notifications;
+
     return ListView.builder(
-      itemCount: 0,
-      itemBuilder: (context, index) => const ListTile(),
+      itemCount: notifications.length,
+      itemBuilder: (context, index) {
+        final notification = notifications[index];
+
+        return ListTile(
+          title: Text(notification.title),
+          subtitle: Text(notification.body),
+          leading: Image.network(
+            notification.imageUrl ??
+                'https://www.google.com/url?sa=i&url=https%3A%2F%2Fstock.adobe.com%2Fsearch%2Fimages%3Fk%3Dno%2Bimage%2Bavailable&psig=AOvVaw2BXvVJQAde__0t0HV4GC4I&ust=1720664061170000&source=images&cd=vfe&opi=89978449&ved=0CBEQjRxqFwoTCKjAiK2zm4cDFQAAAAAdAAAAABAE',
+          ),
+        );
+      },
     );
   }
 }

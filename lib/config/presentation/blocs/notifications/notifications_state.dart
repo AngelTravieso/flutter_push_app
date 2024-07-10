@@ -2,7 +2,6 @@ part of 'notifications_bloc.dart';
 
 class NotificationsState extends Equatable {
   final AuthorizationStatus status;
-  // TODO crear el modelo de notificaciones
   final List<PushMessage> notifications;
 
   const NotificationsState({

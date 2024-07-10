@@ -24,6 +24,7 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
 
   NotificationsBloc() : super(const NotificationsState()) {
     on<NotificationsStatusChanged>(_notificationsStatusChanged);
+    on<NotificationsReceived>(_onPushMessageReceived);
 
     // Ejecutar metodos en el contructor (es parecido a cuando lo llamo en el constructor en riverpod)
     // Apenas la aplicacion se llama lanzar el prompt para los permisos
@@ -50,6 +51,15 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
 
     // Obtener el token
     _getFCMToken();
+  }
+
+  void _onPushMessageReceived(
+      NotificationsReceived event, Emitter<NotificationsState> emit) {
+    emit(
+      state.copyWith(
+        notifications: event.pushMessage,
+      ),
+    );
   }
 
   // Con esto verifico el status de los permisos para notificaciones
@@ -101,6 +111,10 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
           ? message.notification!.android?.imageUrl
           : message.notification!.apple?.imageUrl,
     );
+
+    add(NotificationsReceived(
+      [...state.notifications, notification],
+    ));
 
     print('Message also contained a notification: $notification');
   }
